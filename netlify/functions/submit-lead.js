@@ -63,9 +63,25 @@ export const handler = async (event) => {
       pageUrl: body.pageUrl || 'https://prismlogic.io',
     }
 
-    // Retrieve the target n8n webhook URL from environment variables
+    // Retrieve the target n8n webhook URL from environment variables with fallback
     const webhookUrl =
-      process.env.N8N_LEAD_WEBHOOK_URL
+      process.env.N8N_LEAD_WEBHOOK_URL ||
+      'https://muteebabaloch.app.n8n.cloud/webhook/agency-contact'
+
+    if (!webhookUrl || typeof webhookUrl !== 'string' || !webhookUrl.startsWith('http')) {
+      console.error('[submit-lead] N8N_LEAD_WEBHOOK_URL is missing or invalid:', webhookUrl)
+      return {
+        statusCode: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+        body: JSON.stringify({
+          success: false,
+          error: 'Server configuration error: N8N_LEAD_WEBHOOK_URL environment variable is not configured.',
+        }),
+      }
+    }
 
     console.log('[submit-lead] Forwarding lead to n8n webhook:', webhookUrl)
 
