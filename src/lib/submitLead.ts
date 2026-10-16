@@ -42,9 +42,7 @@ export async function submitLead(formData: LeadFormData): Promise<SubmitLeadResp
 
   // Direct webhook fallback for local dev when Netlify functions daemon is not running
   const directWebhookUrl =
-    import.meta.env.VITE_N8N_WEBHOOK_URL ||
-    'https://muteebabaloch.app.n8n.cloud/webhook/agency-contact'
-
+    import.meta.env.VITE_N8N_WEBHOOK_URL
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 15000)
 
