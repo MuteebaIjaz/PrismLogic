@@ -65,8 +65,7 @@ export const handler = async (event) => {
 
     // Retrieve the target n8n webhook URL from environment variables
     const webhookUrl =
-      process.env.N8N_LEAD_WEBHOOK_URL ||
-      'https://muteebabaloch.app.n8n.cloud/webhook/agency-contact'
+      process.env.N8N_LEAD_WEBHOOK_URL
 
     console.log('[submit-lead] Forwarding lead to n8n webhook:', webhookUrl)
 
