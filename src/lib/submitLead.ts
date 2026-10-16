@@ -9,7 +9,8 @@ export interface SubmitLeadResponse {
 }
 
 /**
- * Submits lead data to the configured n8n webhook with timeout and typed payload
+ * Submits lead data to the Netlify serverless function (/.netlify/functions/submit-lead)
+ * which forwards securely to the automated n8n Lead Capture & Qualification webhook.
  */
 export async function submitLead(formData: LeadFormData): Promise<SubmitLeadResponse> {
   // Honeypot check - if filled, silently succeed without triggering webhook
@@ -17,7 +18,7 @@ export async function submitLead(formData: LeadFormData): Promise<SubmitLeadResp
     console.warn('[PrismLogic Spam Protection] Honeypot field triggered.')
     return {
       success: true,
-      message: 'Lead received.',
+      message: 'Inquiry received.',
       qualificationStatus: 'reviewed',
     }
   }
@@ -36,35 +37,19 @@ export async function submitLead(formData: LeadFormData): Promise<SubmitLeadResp
     pageUrl: typeof window !== 'undefined' ? window.location.href : 'https://prismlogic.io',
   }
 
-  const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL
+  // Primary endpoint: Netlify Serverless Function to prevent CORS
+  const netlifyEndpoint = '/.netlify/functions/submit-lead'
 
-  // If webhook URL is not configured or placeholder, run realistic simulated workflow
-  if (!webhookUrl || webhookUrl.includes('example.com')) {
-    console.info(
-      '%c[PrismLogic Lead System]%c Webhook URL not configured or set to example. Running simulated n8n qualification pipeline...',
-      'color: #22D3EE; font-weight: bold;',
-      'color: #C4B5FD;'
-    )
-    console.info('Payload to be delivered in production:', payload)
+  // Direct webhook fallback for local dev when Netlify functions daemon is not running
+  const directWebhookUrl =
+    import.meta.env.VITE_N8N_WEBHOOK_URL ||
+    'https://muteebabaloch.app.n8n.cloud/webhook/agency-contact'
 
-    // Simulate network round-trip & AI qualification processing
-    await new Promise((resolve) => setTimeout(resolve, 1400))
-
-    return {
-      success: true,
-      message: "Thanks! Our AI assistant is reviewing your request, and you'll hear from us shortly.",
-      leadId: `LEAD-${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
-      qualificationStatus: 'qualified',
-      isDemo: true,
-    }
-  }
-
-  // Production n8n Webhook POST with 15-second AbortController timeout
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 15000)
 
   try {
-    const response = await fetch(webhookUrl, {
+    let response = await fetch(netlifyEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -74,23 +59,52 @@ export async function submitLead(formData: LeadFormData): Promise<SubmitLeadResp
       signal: controller.signal,
     })
 
+    // Local development fallback: if Vite dev server returns 404 for Netlify functions
+    if (
+      response.status === 404 &&
+      typeof window !== 'undefined' &&
+      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ) {
+      console.warn(
+        '[PrismLogic] /.netlify/functions/submit-lead returned 404 on localhost. Falling back to direct n8n webhook...'
+      )
+      response = await fetch(directWebhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      })
+    }
+
     clearTimeout(timeoutId)
 
     if (!response.ok) {
-      throw new Error(`n8n webhook responded with status ${response.status}: ${response.statusText}`)
+      let errText = ''
+      try {
+        const errJson = await response.json()
+        errText = errJson.error || errJson.message || ''
+      } catch {
+        errText = await response.text().catch(() => '')
+      }
+      throw new Error(errText || `Server responded with status ${response.status}`)
     }
 
     let responseData
     try {
       responseData = await response.json()
     } catch {
-      responseData = { message: 'Workflow triggered successfully' }
+      responseData = { message: 'Inquiry received successfully' }
     }
 
     return {
       success: true,
-      message: responseData.message || "Thanks! Our AI assistant is reviewing your request, and you'll hear from us shortly.",
-      leadId: responseData.id || `LEAD-${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
+      message:
+        responseData.message ||
+        "Thanks! Our AI assistant is reviewing your request, and you'll hear from us shortly.",
+      leadId: responseData.leadId || responseData.id,
       qualificationStatus: responseData.qualificationStatus || 'qualified',
     }
   } catch (error: unknown) {
