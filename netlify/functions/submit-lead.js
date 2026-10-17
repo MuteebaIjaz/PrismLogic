@@ -87,12 +87,30 @@ export const handler = async (event) => {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 15000)
 
+    // Construct headers including optional authentication
+    const webhookHeaders = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    }
+
+    if (process.env.N8N_AUTH_HEADER) {
+      webhookHeaders['Authorization'] = process.env.N8N_AUTH_HEADER
+    } else if (process.env.N8N_BASIC_AUTH_USER && process.env.N8N_BASIC_AUTH_PASSWORD) {
+      const credentials = Buffer.from(
+        `${process.env.N8N_BASIC_AUTH_USER}:${process.env.N8N_BASIC_AUTH_PASSWORD}`
+      ).toString('base64')
+      webhookHeaders['Authorization'] = `Basic ${credentials}`
+    } else if (process.env.N8N_BEARER_TOKEN) {
+      webhookHeaders['Authorization'] = `Bearer ${process.env.N8N_BEARER_TOKEN}`
+    }
+
+    if (process.env.N8N_AUTH_HEADER_NAME && process.env.N8N_AUTH_HEADER_VALUE) {
+      webhookHeaders[process.env.N8N_AUTH_HEADER_NAME] = process.env.N8N_AUTH_HEADER_VALUE
+    }
+
     const n8nResponse = await fetch(webhookUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      headers: webhookHeaders,
       body: JSON.stringify(payload),
       signal: controller.signal,
     })

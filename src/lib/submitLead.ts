@@ -67,12 +67,20 @@ export async function submitLead(formData: LeadFormData): Promise<SubmitLeadResp
         '[PrismLogic] /.netlify/functions/submit-lead returned 404 on localhost. Falling back to direct n8n webhook...'
       )
       if (directWebhookUrl && typeof directWebhookUrl === 'string' && directWebhookUrl.startsWith('http')) {
+        const directHeaders: Record<string, string> = {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        }
+        if (import.meta.env.VITE_N8N_AUTH_HEADER) {
+          directHeaders['Authorization'] = import.meta.env.VITE_N8N_AUTH_HEADER
+        }
+        if (import.meta.env.VITE_N8N_AUTH_HEADER_NAME && import.meta.env.VITE_N8N_AUTH_HEADER_VALUE) {
+          directHeaders[import.meta.env.VITE_N8N_AUTH_HEADER_NAME] = import.meta.env.VITE_N8N_AUTH_HEADER_VALUE
+        }
+
         response = await fetch(directWebhookUrl, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
+          headers: directHeaders,
           body: JSON.stringify(payload),
           signal: controller.signal,
         })

@@ -45,12 +45,29 @@ export default defineConfig(({ mode }) => {
                     source: 'website-contact-form',
                   }
 
+                  const webhookHeaders: Record<string, string> = {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                  }
+
+                  if (env.N8N_AUTH_HEADER) {
+                    webhookHeaders['Authorization'] = env.N8N_AUTH_HEADER
+                  } else if (env.N8N_BASIC_AUTH_USER && env.N8N_BASIC_AUTH_PASSWORD) {
+                    const credentials = Buffer.from(
+                      `${env.N8N_BASIC_AUTH_USER}:${env.N8N_BASIC_AUTH_PASSWORD}`
+                    ).toString('base64')
+                    webhookHeaders['Authorization'] = `Basic ${credentials}`
+                  } else if (env.N8N_BEARER_TOKEN) {
+                    webhookHeaders['Authorization'] = `Bearer ${env.N8N_BEARER_TOKEN}`
+                  }
+
+                  if (env.N8N_AUTH_HEADER_NAME && env.N8N_AUTH_HEADER_VALUE) {
+                    webhookHeaders[env.N8N_AUTH_HEADER_NAME] = env.N8N_AUTH_HEADER_VALUE
+                  }
+
                   const n8nResponse = await fetch(webhookUrl, {
                     method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      Accept: 'application/json',
-                    },
+                    headers: webhookHeaders,
                     body: JSON.stringify(payload),
                   })
 
