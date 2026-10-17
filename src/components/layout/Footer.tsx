@@ -2,6 +2,8 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { ArrowUp, Heart } from 'lucide-react'
 
+const CURRENT_YEAR = new Date().getFullYear()
+
 export const Footer: React.FC = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -155,7 +157,7 @@ export const Footer: React.FC = () => {
         {/* Bottom bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-purple-200/90 gap-4 text-center sm:text-left">
           <p className="flex items-center justify-center sm:justify-start gap-1 flex-wrap">
-            &copy; {new Date().getFullYear()} PrismLogic Inc. All rights reserved. Built with
+            &copy; {CURRENT_YEAR} PrismLogic Inc. All rights reserved. Built with
             <Heart className="w-3 h-3 text-red-300 fill-current inline mx-0.5" /> for forward-thinking engineering teams.
           </p>
 

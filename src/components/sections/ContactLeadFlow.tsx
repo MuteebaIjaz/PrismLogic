@@ -74,7 +74,7 @@ const contactSchema = z.object({
     .string()
     .trim()
     .optional()
-    .refine((val) => !val || /^[0-9+\s()\-]+$/.test(val), {
+    .refine((val) => !val || /^[0-9+\s()-]+$/.test(val), {
       message: 'Please enter a valid phone number',
     }),
   service: z.enum(serviceOptions, {
