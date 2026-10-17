@@ -4,10 +4,7 @@ import { defineConfig, loadEnv } from 'vite'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const webhookUrl =
-    env.N8N_LEAD_WEBHOOK_URL ||
-    env.VITE_N8N_WEBHOOK_URL ||
-    'https://muteebabaloch.app.n8n.cloud/webhook/agency-contact'
+  const webhookUrl = env.N8N_LEAD_WEBHOOK_URL || env.VITE_N8N_WEBHOOK_URL || ''
 
   return {
     plugins: [
@@ -32,6 +29,15 @@ export default defineConfig(({ mode }) => {
               })
               req.on('end', async () => {
                 try {
+                  if (!webhookUrl) {
+                    console.warn('[Vite Middleware] Neither N8N_LEAD_WEBHOOK_URL nor VITE_N8N_WEBHOOK_URL is set in local environment (.env).')
+                    res.setHeader('Content-Type', 'application/json')
+                    res.setHeader('Access-Control-Allow-Origin', '*')
+                    res.statusCode = 500
+                    res.end(JSON.stringify({ error: 'N8N webhook URL not configured in local environment.' }))
+                    return
+                  }
+
                   const data = JSON.parse(body || '{}')
                   const payload = {
                     ...data,
