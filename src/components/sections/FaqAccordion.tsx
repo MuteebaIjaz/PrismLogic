@@ -15,14 +15,11 @@ export const FaqAccordion: React.FC = () => {
   }
 
   return (
-    <section id="faq" className="py-24 relative overflow-hidden">
+    <section id="faq" className="py-16 md:py-20 relative overflow-hidden bg-[#FAF9F6] text-gray-950 border-t border-gray-200/80">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionHeading
-          badge="Frequently Asked Questions"
-          badgeVariant="violet"
-          whiteTitle="Everything You Need to Know Before"
-          highlightTitle="Partnering With Us"
-          description="Clear answers regarding pricing models, engineering timelines, technology choices, and how our lead qualification pipeline works."
+          whiteTitle="Frequently Asked"
+          highlightTitle="Questions"
         />
 
         <div className="space-y-4">
@@ -35,8 +32,8 @@ export const FaqAccordion: React.FC = () => {
                 className={cn(
                   'rounded-2xl border transition-all duration-200 overflow-hidden',
                   isOpen
-                    ? 'bg-background-card/90 border-brand-violet/40 shadow-glow-subtle'
-                    : 'bg-white/[0.02] border-white/10 hover:border-white/20'
+                    ? 'bg-white border-primary shadow-md'
+                    : 'bg-white border-indigo-100 hover:border-primary/40'
                 )}
               >
                 <button
@@ -45,15 +42,15 @@ export const FaqAccordion: React.FC = () => {
                   aria-expanded={isOpen}
                   aria-controls={`faq-answer-${faq.id}`}
                   onClick={() => toggleItem(faq.id)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-left text-white font-medium hover:text-brand-lavender transition-colors cursor-pointer select-none"
+                  className="w-full px-6 py-5 flex items-center justify-between text-left text-gray-950 font-medium hover:text-primary transition-colors cursor-pointer select-none"
                 >
                   <span className="text-base sm:text-lg font-semibold pr-4 font-sans">
                     {faq.question}
                   </span>
                   <div
                     className={cn(
-                      'w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0 transition-transform duration-200',
-                      isOpen && 'rotate-180 bg-brand-violet/20 border-brand-violet/40 text-brand-lavender'
+                      'w-8 h-8 rounded-full bg-primary-light border border-indigo-200 flex items-center justify-center shrink-0 transition-transform duration-200 text-primary',
+                      isOpen && 'rotate-180 bg-primary text-white border-primary'
                     )}
                   >
                     <ChevronDown className="w-4 h-4" />
@@ -72,7 +69,7 @@ export const FaqAccordion: React.FC = () => {
                       transition={{ duration: 0.25, ease: 'easeInOut' }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 pb-6 pt-1 text-sm sm:text-base text-gray-300 leading-relaxed border-t border-white/5 mt-1 font-normal">
+                      <div className="px-6 pb-6 pt-1 text-sm sm:text-base text-gray-700 leading-relaxed border-t border-gray-100 mt-1 font-normal">
                         {faq.answer}
                       </div>
                     </motion.div>

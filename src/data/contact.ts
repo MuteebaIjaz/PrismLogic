@@ -18,8 +18,8 @@ export interface WhatHappensStep {
 
 export const contactData: ContactInfo = {
   email: 'hello@prismlogic.com',
-  phone: '+92 300 1234567',
-  address: 'Hyderabad, Sindh, Pakistan',
+  phone: '(626) 730-5710',
+  address: '790 E Colorado Blvd, Pasadena, CA 91101',
 }
 
 export const socialLinks: SocialLink[] = [

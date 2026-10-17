@@ -9,23 +9,35 @@ export default {
   theme: {
     extend: {
       colors: {
+        primary: {
+          DEFAULT: '#4F46E5',
+          light: '#EEF2FF',
+          lighter: '#F5F7FF',
+          dark: '#4338CA',
+          hover: '#4338CA',
+        },
+        secondary: {
+          DEFAULT: '#FAF9F6',
+          warm: '#FAF9F6',
+          surface: '#FFFFFF',
+        },
         background: {
-          DEFAULT: '#0A0A12',
+          DEFAULT: '#FAF9F6',
           deep: '#050507',
           card: '#0D0C18',
           elevated: '#121124',
           subtle: '#18162E',
         },
         brand: {
-          violet: '#6D28D9',
-          'violet-dark': '#581C87',
-          'violet-light': '#7C3AED',
+          violet: '#4F46E5',
+          'violet-dark': '#4338CA',
+          'violet-light': '#6366F1',
           indigo: '#4F46E5',
           'indigo-light': '#6366F1',
-          lavender: '#C4B5FD',
-          'lavender-light': '#DDD6FE',
-          cyan: '#22D3EE',
-          'cyan-glow': 'rgba(34, 211, 238, 0.4)',
+          lavender: '#C7D2FE',
+          'lavender-light': '#EEF2FF',
+          cyan: '#4F46E5',
+          'cyan-glow': 'rgba(79, 70, 229, 0.4)',
         },
       },
       fontFamily: {
@@ -38,17 +50,17 @@ export default {
         'pill': '9999px',
       },
       boxShadow: {
-        'glow-violet': '0 0 40px -10px rgba(109, 40, 217, 0.45)',
+        'glow-violet': '0 0 40px -10px rgba(79, 70, 229, 0.45)',
         'glow-indigo': '0 0 50px -12px rgba(79, 70, 229, 0.45)',
-        'glow-cyan': '0 0 30px -8px rgba(34, 211, 238, 0.4)',
-        'glow-subtle': '0 0 25px -5px rgba(196, 181, 253, 0.15)',
-        'card-hover': '0 12px 36px -8px rgba(109, 40, 217, 0.25)',
+        'glow-cyan': '0 0 30px -8px rgba(79, 70, 229, 0.4)',
+        'glow-subtle': '0 0 25px -5px rgba(79, 70, 229, 0.15)',
+        'card-hover': '0 12px 36px -8px rgba(79, 70, 229, 0.25)',
       },
       backgroundImage: {
-        'radial-glow': 'radial-gradient(ellipse at 50% -20%, rgba(109, 40, 217, 0.35), transparent 70%)',
-        'aurora-mesh': 'radial-gradient(circle at 20% 20%, rgba(109, 40, 217, 0.25) 0%, transparent 40%), radial-gradient(circle at 80% 30%, rgba(79, 70, 229, 0.2) 0%, transparent 45%), radial-gradient(circle at 50% 60%, rgba(34, 211, 238, 0.08) 0%, transparent 50%)',
+        'radial-glow': 'radial-gradient(ellipse at 50% -20%, rgba(79, 70, 229, 0.35), transparent 70%)',
+        'aurora-mesh': 'radial-gradient(circle at 20% 20%, rgba(79, 70, 229, 0.25) 0%, transparent 40%), radial-gradient(circle at 80% 30%, rgba(79, 70, 229, 0.2) 0%, transparent 45%), radial-gradient(circle at 50% 60%, rgba(79, 70, 229, 0.08) 0%, transparent 50%)',
         'card-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%)',
-        'card-hover-gradient': 'linear-gradient(135deg, rgba(109, 40, 217, 0.15) 0%, rgba(79, 70, 229, 0.05) 100%)',
+        'card-hover-gradient': 'linear-gradient(135deg, rgba(79, 70, 229, 0.15) 0%, rgba(79, 70, 229, 0.05) 100%)',
       },
       animation: {
         'beam-sweep': 'beamSweep 8s ease-in-out infinite',

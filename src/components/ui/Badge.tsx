@@ -23,10 +23,10 @@ export const Badge: React.FC<BadgeProps> = ({
   }
 
   const variantStyles = {
-    violet: 'bg-brand-violet/15 text-brand-lavender border-brand-violet/30 shadow-[0_0_12px_rgba(109,40,217,0.2)]',
-    cyan: 'bg-cyan-950/40 text-cyan-300 border-cyan-500/30 shadow-[0_0_12px_rgba(34,211,238,0.2)]',
-    lavender: 'bg-purple-950/40 text-purple-200 border-purple-400/25',
-    subtle: 'bg-white/5 text-gray-300 border-white/10',
+    violet: 'bg-primary-light text-primary border-primary/25',
+    cyan: 'bg-primary-light text-primary border-primary/25',
+    lavender: 'bg-primary-light text-primary border-primary/25',
+    subtle: 'bg-primary-light/60 text-gray-800 border-indigo-100',
   }
 
   return (
@@ -34,8 +34,7 @@ export const Badge: React.FC<BadgeProps> = ({
       {dot && (
         <span
           className={cn(
-            'w-1.5 h-1.5 rounded-full animate-pulse',
-            variant === 'cyan' ? 'bg-brand-cyan' : 'bg-brand-lavender'
+            'w-1.5 h-1.5 rounded-full animate-pulse bg-primary'
           )}
         />
       )}

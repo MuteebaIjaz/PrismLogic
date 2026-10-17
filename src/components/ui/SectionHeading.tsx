@@ -35,17 +35,17 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
         className
       )}
     >
-      <h2 className={cn('text-3xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-[1.15]', titleClassName)}>
+      <h2 className={cn('text-3xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-gray-950 leading-[1.15]', titleClassName)}>
         {whiteTitle}{' '}
         {highlightTitle && (
-          <span className="text-brand-lavender text-gradient-white-lavender">
+          <span className="text-primary inline-block">
             {highlightTitle}
           </span>
         )}
       </h2>
 
       {description && (
-        <p className={cn('mt-4 text-base sm:text-base text-gray-400 font-normal leading-relaxed max-w-2xl mx-auto', descriptionClassName)}>
+        <p className={cn('mt-4 text-base sm:text-base text-gray-700 font-normal leading-relaxed max-w-2xl mx-auto', descriptionClassName)}>
           {description}
         </p>
       )}

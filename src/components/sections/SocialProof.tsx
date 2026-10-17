@@ -51,10 +51,10 @@ function Counter({ value, suffix, prefix }: { value: number; suffix?: string; pr
 
 export const SocialProof: React.FC = () => {
   return (
-    <section className="py-12 border-y border-white/10 bg-background-card/40 relative backdrop-blur-sm">
+    <section className="py-12 border-y border-gray-200/80 bg-[#FAF9F6] text-gray-950 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Animated Key Stats Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 pb-12 border-b border-white/5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 pb-12 border-b border-gray-200/80">
           {statsData.map((stat, idx) => (
             <motion.div
               key={stat.id}
@@ -62,20 +62,20 @@ export const SocialProof: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="text-center sm:text-left p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-violet-500/20 transition-colors"
+              className="text-center sm:text-left p-4 rounded-xl bg-white border border-indigo-100 shadow-sm hover:border-primary/40 transition-colors"
             >
-              <div className="text-3xl sm:text-4xl font-bold font-display text-white text-gradient-white-lavender mb-1">
+              <div className="text-3xl sm:text-4xl font-bold font-display text-primary mb-1">
                 <Counter value={stat.value} suffix={stat.suffix} prefix={stat.prefix} />
               </div>
-              <div className="text-sm font-semibold text-gray-200">{stat.label}</div>
-              <div className="text-xs text-gray-400 mt-0.5">{stat.sublabel}</div>
+              <div className="text-sm font-semibold text-gray-950">{stat.label}</div>
+              <div className="text-xs text-gray-600 mt-0.5">{stat.sublabel}</div>
             </motion.div>
           ))}
         </div>
 
         {/* Client Logos Strip */}
         <div className="pt-8">
-          <p className="text-center text-xs font-mono uppercase tracking-widest text-gray-500 mb-6">
+          <p className="text-center text-xs font-mono uppercase tracking-widest text-gray-600 mb-6">
             Trusted by engineering teams and hyper-growth enterprises worldwide
           </p>
 
@@ -87,12 +87,12 @@ export const SocialProof: React.FC = () => {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.08 }}
-                className="flex items-center justify-center space-x-2 text-gray-400 hover:text-white transition-colors duration-200 py-2 group cursor-default"
+                className="flex items-center justify-center space-x-2 text-gray-600 hover:text-primary transition-colors duration-200 py-2 group cursor-default"
               >
-                <div className="text-brand-lavender/60 group-hover:text-brand-cyan transition-colors">
+                <div className="text-primary transition-colors">
                   {iconMap[client.icon]}
                 </div>
-                <span className="font-display font-medium text-sm tracking-tight text-gray-300 group-hover:text-white">
+                <span className="font-display font-medium text-sm tracking-tight text-gray-800 group-hover:text-primary">
                   {client.name}
                 </span>
               </motion.div>

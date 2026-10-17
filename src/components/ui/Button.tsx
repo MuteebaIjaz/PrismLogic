@@ -2,7 +2,7 @@ import React from 'react'
 import { cn } from '../../lib/utils'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'secondary-light' | 'outline' | 'ghost' | 'glow'
+  variant?: 'primary' | 'secondary' | 'secondary-light' | 'outline' | 'ghost' | 'glow' | 'white'
   size?: 'sm' | 'md' | 'lg'
   isLoading?: boolean
   leftIcon?: React.ReactNode
@@ -25,7 +25,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-medium transition-all duration-200 select-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-violet focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]'
+      'inline-flex items-center justify-center font-medium transition-all duration-200 select-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]'
 
     const sizeStyles = {
       sm: 'text-xs px-3.5 py-1.5 rounded-lg gap-1.5',
@@ -35,15 +35,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantStyles = {
       primary:
-        'bg-gradient-to-r from-brand-violet to-brand-indigo text-white shadow-glow-violet hover:shadow-lg hover:from-purple-600 hover:to-indigo-500 border border-violet-400/20',
+        'bg-primary hover:bg-primary-dark text-white shadow-md hover:shadow-lg transition-all border border-indigo-400/20',
       glow:
-        'bg-gradient-to-r from-brand-violet via-purple-600 to-brand-indigo text-white shadow-glow-violet hover:shadow-[0_0_30px_rgba(109,40,217,0.7)] border border-violet-300/30 font-semibold',
+        'bg-primary hover:bg-primary-dark text-white shadow-[0_4px_16px_rgba(79,70,229,0.35)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.5)] border border-indigo-300/30 font-semibold',
+      white:
+        'bg-white hover:bg-indigo-50 text-primary hover:text-primary-dark shadow-md hover:shadow-lg border border-white/40 font-bold',
       secondary:
         'bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-white/20 backdrop-blur-md',
       'secondary-light':
-        'bg-white hover:bg-violet-50/50 text-gray-900 hover:text-brand-violet border border-gray-200/90 hover:border-brand-violet/40 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_20px_-6px_rgba(109,40,217,0.18)] font-semibold',
+        'bg-white hover:bg-primary-light text-gray-950 hover:text-primary border border-gray-200/90 hover:border-primary/40 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_20px_-6px_rgba(79,70,229,0.18)] font-semibold',
       outline:
-        'bg-transparent hover:bg-white/5 text-gray-200 border border-white/15 hover:border-brand-lavender/40 hover:text-white',
+        'bg-transparent hover:bg-white/5 text-gray-200 border border-white/15 hover:border-primary/40 hover:text-white',
       ghost:
         'bg-transparent hover:bg-white/5 text-gray-300 hover:text-white',
     }

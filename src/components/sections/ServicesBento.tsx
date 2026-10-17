@@ -12,7 +12,7 @@ import {
 } from 'lucide-react'
 import { servicesData } from '../../data/services'
 import { SectionHeading } from '../ui/SectionHeading'
-import { Badge } from '../ui/Badge'
+import { Button } from '../ui/Button'
 import { cn } from '../../lib/utils'
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -29,20 +29,18 @@ export const ServicesBento: React.FC = () => {
   const activeServices = servicesData.filter((s) => s.visible !== false).slice(0, 3)
 
   return (
-    <section id="services" className="py-16 md:py-20 relative overflow-hidden bg-brand-violet text-white">
+    <section id="services" className="py-16 md:py-20 relative overflow-hidden bg-[#FAF9F6] text-gray-950 border-t border-gray-200/80">
       {/* Background ambient lighting */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-white/5 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionHeading
           className="mb-8 sm:mb-10"
-          whiteTitle="Engineering Solutions Engineered for"
-          highlightTitle="Unfair Velocity"
-          description="We build bespoke high-throughput software, production-ready AI pipelines, and modern mobile applications that scale predictably."
-          descriptionClassName="text-purple-100/90"
+          whiteTitle="Our Core"
+          highlightTitle="Services"
         />
 
-        {/* 3-Column Single Row Grid on Desktop (1 column on mobile, 3 from lg breakpoint up) */}
+        {/* 3-Column Single Row Grid on Desktop */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {activeServices.map((service, idx) => {
             const isFeatured = service.isFeatured
@@ -59,58 +57,60 @@ export const ServicesBento: React.FC = () => {
                 <div
                   className={cn(
                     'relative rounded-[22px] p-6 sm:p-7 h-full flex flex-col justify-between transition-all duration-300 group',
-                    isFeatured
-                      ? 'bg-[#3B0764]/95 border-2 border-cyan-400/50 shadow-[0_16px_36px_-6px_rgba(0,0,0,0.45),0_0_20px_rgba(34,211,238,0.15)] hover:border-cyan-300 hover:shadow-[0_20px_42px_-6px_rgba(0,0,0,0.55),0_0_26px_rgba(34,211,238,0.25)]'
-                      : 'bg-[#3B0764]/85 border border-white/15 shadow-[0_12px_28px_-6px_rgba(0,0,0,0.35)] hover:border-white/30 hover:shadow-[0_16px_32px_-6px_rgba(0,0,0,0.45)]'
+                    'bg-primary text-white border border-white/20 shadow-[0_12px_32px_-6px_rgba(79,70,229,0.35)]',
+                    'hover:shadow-[0_18px_42px_-6px_rgba(79,70,229,0.5)] hover:-translate-y-1',
+                    isFeatured && 'ring-2 ring-white/30'
                   )}
                 >
-                  {/* Subtle inner top-light gradient */}
-                  <div className="absolute inset-0 rounded-[22px] bg-gradient-to-b from-white/[0.05] via-transparent to-transparent pointer-events-none" />
+                  {/* Subtle top sheen */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[22px] pointer-events-none" />
+
+                  {/* Middle Card Circular Stamp (Straight, Positioned Just Slightly Overlapping Outside Top-Right Corner) */}
+                  {isFeatured && (
+                    <div className="absolute -top-2.5 -right-2.5 sm:-top-3 sm:-right-3 z-20 pointer-events-none select-none">
+                      <div className="w-[78px] h-[78px] sm:w-[86px] sm:h-[86px] rounded-full bg-white text-primary p-1 shadow-[0_6px_20px_rgba(0,0,0,0.2)] border-2 border-primary flex items-center justify-center">
+                        <div className="w-full h-full rounded-full border border-dashed border-primary flex flex-col items-center justify-center p-1 text-center">
+                          <span className="text-[8px] sm:text-[9px] text-primary leading-none mb-0.5">★</span>
+                          <span className="font-mono font-black text-[9px] sm:text-[10px] uppercase tracking-wider leading-[1.1] text-primary">
+                            HIGH IN
+                          </span>
+                          <span className="font-mono font-black text-[10px] sm:text-[11px] uppercase tracking-wider leading-[1.1] text-primary">
+                            DEMAND
+                          </span>
+                          <span className="text-[8px] sm:text-[9px] text-primary leading-none mt-0.5">★</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Card Content Top */}
                   <div className="relative z-10 flex flex-col flex-1">
-                    {/* Top Squircle Icon & Optional Badge */}
-                    <div className="flex items-center justify-between mb-5">
-                      <div
-                        className={cn(
-                          'w-13 h-13 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-md p-3.5',
-                          isFeatured
-                            ? 'bg-gradient-to-tr from-brand-violet via-purple-700 to-cyan-500 border border-cyan-400/40 shadow-[0_0_16px_rgba(34,211,238,0.3)] group-hover:scale-105'
-                            : 'bg-gradient-to-tr from-brand-violet via-purple-700 to-indigo-800 border border-white/20 shadow-md group-hover:scale-105'
-                        )}
-                      >
-                        {iconMap[service.iconName]}
+                    {/* Top Row: Square White Icon */}
+                    <div className="mb-5">
+                      <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-xl bg-white text-primary flex items-center justify-center transition-all duration-300 shadow-md p-3 group-hover:scale-105 shrink-0 border border-white inline-flex">
+                        {React.cloneElement(iconMap[service.iconName] as React.ReactElement<{ className?: string }>, {
+                          className: 'w-6 h-6 text-primary',
+                        })}
                       </div>
-
-                      {service.badge && (
-                        <Badge variant="cyan" dot size="sm">
-                          {service.badge}
-                        </Badge>
-                      )}
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 font-display tracking-tight group-hover:text-purple-200 transition-colors">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 font-display tracking-tight">
                       {service.title}
                     </h3>
 
-                    {/* Description Paragraph with standardized height for visual alignment */}
-                    <p className="text-sm text-purple-100/90 leading-relaxed mb-5 font-normal min-h-[44px]">
+                    {/* Description Paragraph */}
+                    <p className="text-sm text-white/85 leading-relaxed mb-5 font-normal min-h-[44px]">
                       {service.description}
                     </p>
 
-                    {/* Inset Inner Container Box (Feature Checklist [Max 3] + Tech Pill Badges) */}
-                    <div className="rounded-xl bg-black/25 border border-white/10 p-4 mb-5 space-y-3.5 group-hover:border-white/20 transition-colors flex-1 flex flex-col justify-between">
-                      {/* Feature Bullet Points (Max 3 items) */}
+                    {/* Inset Inner Feature Card (Pure White with Dark Text & Primary Accents) */}
+                    <div className="rounded-xl bg-white p-4 sm:p-4.5 mb-5 space-y-3.5 flex-1 flex flex-col justify-between shadow-sm border border-white">
+                      {/* Feature Bullet Points */}
                       <ul className="space-y-2">
                         {service.features.slice(0, 3).map((feature, fIdx) => (
-                          <li key={fIdx} className="flex items-center text-xs sm:text-[13px] text-purple-50 font-medium">
-                            <CheckCircle2
-                              className={cn(
-                                'w-4 h-4 mr-2.5 shrink-0',
-                                isFeatured ? 'text-brand-cyan' : 'text-brand-lavender'
-                              )}
-                            />
+                          <li key={fIdx} className="flex items-center text-xs sm:text-[13px] text-gray-900 font-medium">
+                            <CheckCircle2 className="w-4 h-4 mr-2.5 shrink-0 text-primary" />
                             <span>{feature}</span>
                           </li>
                         ))}
@@ -118,16 +118,11 @@ export const ServicesBento: React.FC = () => {
 
                       {/* Pill-Shaped Tech Badges */}
                       {service.technologies && (
-                        <div className="pt-2.5 border-t border-white/10 flex flex-wrap gap-1.5">
+                        <div className="pt-2.5 border-t border-gray-100 flex flex-wrap gap-1.5">
                           {service.technologies.map((tech) => (
                             <span
                               key={tech}
-                              className={cn(
-                                'px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium transition-colors',
-                                isFeatured
-                                  ? 'bg-cyan-950/70 text-cyan-200 border border-cyan-400/30 hover:border-cyan-400/60'
-                                  : 'bg-white/10 text-purple-100 border border-white/15 hover:border-white/30 hover:bg-white/15'
-                              )}
+                              className="px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold bg-primary text-white border border-primary shadow-2xs hover:bg-primary-dark transition-colors"
                             >
                               {tech}
                             </span>
@@ -138,25 +133,15 @@ export const ServicesBento: React.FC = () => {
                   </div>
 
                   {/* Card Bottom: EXPLORE CTA Link */}
-                  <div className="pt-2 relative z-10 flex items-center justify-between border-t border-white/10">
+                  <div className="pt-3 relative z-10 flex items-center justify-between border-t border-white/15">
                     <button
                       type="button"
                       aria-label={`Explore ${service.title}`}
-                      className={cn(
-                        'text-xs font-bold uppercase tracking-widest flex items-center space-x-1.5 transition-all duration-200 cursor-pointer group-hover:translate-x-1 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-violet rounded-lg py-1',
-                        isFeatured
-                          ? 'text-cyan-300 hover:text-white'
-                          : 'text-brand-lavender hover:text-white'
-                      )}
+                      className="text-xs font-bold uppercase tracking-widest flex items-center space-x-1.5 transition-all duration-200 cursor-pointer group-hover:translate-x-1 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-lg py-1 text-white hover:text-white/80"
                     >
                       <span>EXPLORE</span>
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 text-white" />
                     </button>
-                    {isFeatured && (
-                      <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-cyan-300/80">
-                        High Demand
-                      </span>
-                    )}
                   </div>
                 </div>
               </motion.div>
@@ -164,15 +149,18 @@ export const ServicesBento: React.FC = () => {
           })}
         </div>
 
-        {/* Display-only: no action on this demo site. */}
+        {/* Explore More Services Button */}
         <div className="mt-10 sm:mt-12 text-center">
-          <button
-            type="button"
-            className="inline-flex items-center justify-center font-medium transition-all duration-200 select-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 px-7 py-3 rounded-xl gap-2 text-sm bg-white/10 hover:bg-white/20 text-white border border-white/25 backdrop-blur-md group active:scale-[0.98] shadow-md"
-          >
-            <span>Explore More Services</span>
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </button>
+          <a href="#contact">
+            <Button
+              variant="glow"
+              size="lg"
+              className="px-8 py-3.5 text-sm font-semibold rounded-xl shadow-md"
+              rightIcon={<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />}
+            >
+              Explore More Services
+            </Button>
+          </a>
         </div>
       </div>
     </section>

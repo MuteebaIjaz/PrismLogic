@@ -10,7 +10,7 @@ import { ScrollingStrip } from './components/ui/ScrollingStrip'
 
 export const App: React.FC = () => {
   return (
-    <div className="relative min-h-screen bg-white text-gray-900 flex flex-col font-sans selection:bg-brand-violet selection:text-white">
+    <div className="relative min-h-screen bg-[#FAF9F6] text-gray-950 flex flex-col font-sans selection:bg-primary selection:text-white">
       {/* Subtle Noise Texture */}
       <div className="fixed inset-0 bg-noise opacity-30 pointer-events-none z-40" />
 

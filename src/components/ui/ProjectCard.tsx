@@ -1,6 +1,22 @@
-import React, { useState, useRef } from 'react'
+import React, { useRef } from 'react'
 import { motion } from 'framer-motion'
-import { ExternalLink, ArrowRight, Code2, Globe, Palette, Atom, Wind, Server, Database, Workflow, Terminal, Sparkles, Cpu, Layers, FileCode } from 'lucide-react'
+import {
+  ExternalLink,
+  ArrowRight,
+  Code2,
+  Globe,
+  Palette,
+  Atom,
+  Wind,
+  Server,
+  Database,
+  Workflow,
+  Terminal,
+  Sparkles,
+  Cpu,
+  Layers,
+  FileCode,
+} from 'lucide-react'
 import type { Project } from '../../data/projects'
 import { cn } from '../../lib/utils'
 
@@ -9,38 +25,27 @@ interface ProjectCardProps {
   index: number
 }
 
-// Icon mapper for tech chips
+// Icon mapper for tech chips - white icons
 const techIconMap: Record<string, React.ReactNode> = {
-  Code: <Code2 className="w-3 h-3 text-brand-lavender" />,
-  Code2: <Code2 className="w-3 h-3 text-brand-lavender" />,
-  Palette: <Palette className="w-3 h-3 text-pink-400" />,
-  Wind: <Wind className="w-3 h-3 text-cyan-400" />,
-  Atom: <Atom className="w-3 h-3 text-sky-400" />,
-  Globe: <Globe className="w-3 h-3 text-indigo-400" />,
-  Server: <Server className="w-3 h-3 text-emerald-400" />,
-  Database: <Database className="w-3 h-3 text-amber-400" />,
-  Workflow: <Workflow className="w-3 h-3 text-brand-cyan" />,
-  Terminal: <Terminal className="w-3 h-3 text-green-400" />,
-  Sparkles: <Sparkles className="w-3 h-3 text-purple-300" />,
-  Cpu: <Cpu className="w-3 h-3 text-cyan-300" />,
-  Layers: <Layers className="w-3 h-3 text-violet-300" />,
-  FileCode: <FileCode className="w-3 h-3 text-blue-400" />,
-  Figma: <Palette className="w-3 h-3 text-purple-400" />,
+  Code: <Code2 className="w-3 h-3 text-white" />,
+  Code2: <Code2 className="w-3 h-3 text-white" />,
+  Palette: <Palette className="w-3 h-3 text-white" />,
+  Wind: <Wind className="w-3 h-3 text-white" />,
+  Atom: <Atom className="w-3 h-3 text-white" />,
+  Globe: <Globe className="w-3 h-3 text-white" />,
+  Server: <Server className="w-3 h-3 text-white" />,
+  Database: <Database className="w-3 h-3 text-white" />,
+  Workflow: <Workflow className="w-3 h-3 text-white" />,
+  Terminal: <Terminal className="w-3 h-3 text-white" />,
+  Sparkles: <Sparkles className="w-3 h-3 text-white" />,
+  Cpu: <Cpu className="w-3 h-3 text-white" />,
+  Layers: <Layers className="w-3 h-3 text-white" />,
+  FileCode: <FileCode className="w-3 h-3 text-white" />,
+  Figma: <Palette className="w-3 h-3 text-white" />,
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
   const cardRef = useRef<HTMLDivElement>(null)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [isHovered, setIsHovered] = useState(false)
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    })
-  }
 
   return (
     <motion.div
@@ -52,67 +57,46 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
     >
       <div
         ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
         tabIndex={0}
         role="article"
         aria-label={project.title}
         className={cn(
-          'relative rounded-[24px] bg-white border border-gray-200/95',
-          'shadow-[0_20px_45px_-10px_rgba(15,23,42,0.14),0_10px_22px_-6px_rgba(15,23,42,0.08),0_0_0_1px_rgba(15,23,42,0.06)]',
-          'transition-all duration-300 ease-out group overflow-hidden flex flex-col justify-between h-full',
-          'hover:-translate-y-2 hover:border-brand-violet/40 hover:shadow-[0_30px_60px_-12px_rgba(109,40,217,0.28),0_14px_28px_-6px_rgba(15,23,42,0.1),0_0_0_1.5px_rgba(109,40,217,0.35)]',
-          'focus-visible:ring-2 focus-visible:ring-brand-violet focus-visible:ring-offset-2 outline-none'
+          'relative rounded-[22px] p-5 sm:p-6 h-full flex flex-col justify-between transition-all duration-300 group overflow-hidden',
+          'bg-primary text-white border border-white/20 shadow-[0_12px_32px_-6px_rgba(79,70,229,0.35)]',
+          'hover:shadow-[0_18px_42px_-6px_rgba(79,70,229,0.5)] hover:-translate-y-1.5',
+          'focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 outline-none'
         )}
       >
-        {/* Cursor-following subtle spotlight glow */}
-        {isHovered && (
-          <div
-            className="pointer-events-none absolute -inset-px transition-opacity duration-300 z-0 opacity-100"
-            style={{
-              background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(109, 40, 217, 0.08), transparent 70%)`,
-            }}
-          />
-        )}
+        {/* Subtle top sheen */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[22px] pointer-events-none z-0" />
 
-        {/* Faint Inner Top-Down Gradient Sheen */}
-        <div className="absolute inset-0 rounded-[24px] bg-gradient-to-b from-black/[0.01] via-transparent to-transparent pointer-events-none" />
-
-        {/* TOP AREA (Preview Mockup ~45% height) */}
-        <div className="relative h-60 sm:h-64 w-full overflow-hidden rounded-t-[23px] border-b border-gray-200/80 z-10 bg-[#0C0B16]">
-          {/* Per-card custom radial glow backdrop */}
-          <div
-            className="absolute inset-0 pointer-events-none transition-opacity duration-500 group-hover:opacity-100 opacity-60"
-            style={{
-              background: `radial-gradient(circle at 60% 40%, ${project.accent}, transparent 65%)`,
-            }}
-          />
-
-          {/* Top-Right Glass-Style Pills */}
-          <div className="absolute top-3.5 right-3.5 z-20 flex items-center gap-1.5 max-w-[55%] flex-wrap justify-end">
-            {project.previewTags?.map((tag) => (
-              <span
-                key={tag}
-                className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-xs"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          {/* Result Metric Badge Accent */}
-          {project.metric && (
-            <div className="absolute top-3.5 left-3.5 z-20">
-              <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-black/60 text-brand-lavender border border-brand-violet/40 shadow-xs flex items-center gap-1.5 backdrop-blur-md">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-violet animate-pulse" />
-                {project.metric}
-              </span>
+        {/* Card Content Top Container */}
+        <div className="relative z-10 flex flex-col flex-1">
+          {/* Mockup Preview Area */}
+          <div className="relative h-48 sm:h-52 w-full overflow-hidden rounded-xl border border-white/20 shadow-md bg-primary-dark/40 mb-4.5">
+            {/* Top-Right Tags */}
+            <div className="absolute top-2.5 right-2.5 z-20 flex items-center gap-1.5 max-w-[65%] flex-wrap justify-end">
+              {project.previewTags?.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-white text-primary shadow-xs"
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
-          )}
 
-          {/* Project Mockup Image: laptop + phone bleeding off edge */}
-          <div className="relative w-full h-full flex items-center justify-center p-2.5">
+            {/* Metric Badge Accent */}
+            {project.metric && (
+              <div className="absolute top-2.5 left-2.5 z-20">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-mono font-bold bg-white text-primary shadow-xs flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                  {project.metric}
+                </span>
+              </div>
+            )}
+
+            {/* Mockup Image */}
             <img
               src={project.image}
               alt={`${project.title} Preview Mockup`}
@@ -120,90 +104,90 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
               width="800"
               height="500"
               className={cn(
-                'w-full h-full object-cover object-center rounded-lg shadow-xl',
-                'transition-transform duration-500 ease-out group-hover:scale-[1.03] group-hover:-translate-y-0.5'
+                'w-full h-full object-cover object-center',
+                'transition-transform duration-500 ease-out group-hover:scale-[1.03]'
               )}
             />
           </div>
-        </div>
 
-        {/* BODY AREA (Below Preview) */}
-        <div className="p-6 sm:p-7 flex flex-col justify-between flex-1 z-10 relative">
-          <div>
-            {/* 1. Category Pill */}
-            <div className="mb-3">
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-brand-violet/10 text-brand-violet border border-brand-violet/25">
-                {project.category}
-              </span>
-            </div>
+          {/* Category Badge */}
+          <div className="mb-2">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white text-primary shadow-xs">
+              {project.category}
+            </span>
+          </div>
 
-            {/* 2. Project Title with equalized minimum height */}
-            <h3 className="text-lg sm:text-xl font-bold font-display text-gray-950 mb-3 tracking-tight leading-snug group-hover:text-brand-violet transition-colors min-h-[52px] flex items-center">
-              {project.title}
-            </h3>
+          {/* Project Title */}
+          <h3 className="text-xl sm:text-2xl font-bold font-display text-white mb-3.5 tracking-tight leading-snug min-h-[56px] flex items-center">
+            {project.title}
+          </h3>
 
-            {/* 3. Description Micro-Label with Thin Line */}
-            <div className="mb-4">
-              <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-brand-violet font-semibold mb-1.5">
+          {/* Inset Inner Feature Card (Pure White with Dark Text & Primary Accents) */}
+          <div className="rounded-xl bg-white p-4 sm:p-4.5 mb-4 space-y-3 flex-1 flex flex-col justify-between shadow-sm border border-white text-gray-900">
+            {/* Description */}
+            <div>
+              <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-primary font-bold mb-1.5">
                 <span>Description</span>
-                <div className="flex-1 h-[1px] bg-gradient-to-r from-brand-violet/25 to-transparent" />
+                <div className="flex-1 h-[1px] bg-gradient-to-r from-primary/30 to-transparent" />
               </div>
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed line-clamp-3 min-h-[56px]">
+              <p className="text-xs sm:text-[13px] text-gray-700 leading-relaxed line-clamp-3 min-h-[50px]">
                 {project.description}
               </p>
             </div>
 
-            {/* 4. Technologies Micro-Label with Thin Line */}
-            <div className="mb-6">
-              <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-brand-violet font-semibold mb-2">
+            {/* Technologies */}
+            <div className="pt-2.5 border-t border-gray-100">
+              <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-primary font-bold mb-2">
                 <span>Technologies</span>
-                <div className="flex-1 h-[1px] bg-gradient-to-r from-brand-violet/25 to-transparent" />
+                <div className="flex-1 h-[1px] bg-gradient-to-r from-primary/30 to-transparent" />
               </div>
-              <div className="flex flex-wrap gap-1.5 min-h-[32px] items-center">
+              <div className="flex flex-wrap gap-1.5 min-h-[30px] items-center">
                 {project.technologies.map((tech) => (
                   <span
                     key={tech.name}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-medium bg-gray-50 border border-gray-200 text-gray-700 group-hover:border-gray-300 transition-colors shadow-2xs"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold bg-primary text-white border border-primary hover:bg-primary-dark transition-colors shadow-2xs"
                   >
-                    {techIconMap[tech.icon] || <Code2 className="w-3 h-3 text-brand-violet" />}
-                    <span>{tech.name}</span>
+                    {techIconMap[tech.icon] || <Code2 className="w-3 h-3 text-white" />}
+                    <span className="text-white">{tech.name}</span>
                   </span>
                 ))}
               </div>
             </div>
           </div>
+        </div>
 
-          {/* 5. Divider Line & Footer Row */}
-          <div className="pt-4 border-t border-gray-100 flex items-center justify-between mt-auto">
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-violet hover:text-brand-indigo transition-colors group/link"
-              onClick={(e) => {
-                // Prevent bubbling to card
-                e.stopPropagation()
-              }}
-            >
-              <span>Live Demo</span>
-              <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
-            </a>
+        {/* Card Bottom: Live Demo & Action Button */}
+        <div className="pt-3 relative z-10 flex items-center justify-between border-t border-white/20 mt-auto">
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 transition-all duration-200 cursor-pointer group-hover:translate-x-0.5 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-lg py-1 text-white hover:text-white/80"
+            onClick={(e) => {
+              e.stopPropagation()
+            }}
+          >
+            <span>Live Demo</span>
+            <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-white" />
+          </a>
 
-            {/* Circular Arrow Button */}
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Open ${project.title} live preview`}
-              className={cn(
-                'w-9 h-9 rounded-full bg-gradient-to-r from-brand-violet to-brand-indigo',
-                'flex items-center justify-center text-white shadow-glow-violet transition-all duration-300',
-                'group-hover:shadow-[0_0_20px_rgba(109,40,217,0.5)] group-hover:scale-110 group-hover:rotate-[-45deg]'
-              )}
-            >
-              <ArrowRight className="w-4 h-4 stroke-[2.5]" />
-            </a>
-          </div>
+          {/* Circular White Action Button with Primary Arrow */}
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open ${project.title} live preview`}
+            className={cn(
+              'w-9 h-9 rounded-full bg-white text-primary',
+              'flex items-center justify-center shadow-md transition-all duration-300',
+              'hover:bg-white/95 group-hover:scale-110 group-hover:rotate-[-45deg]'
+            )}
+            onClick={(e) => {
+              e.stopPropagation()
+            }}
+          >
+            <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+          </a>
         </div>
       </div>
     </motion.div>

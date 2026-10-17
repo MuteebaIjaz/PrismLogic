@@ -26,7 +26,6 @@ export const servicesData: ServiceItem[] = [
     technologies: ['n8n', 'LangChain', 'OpenAI', 'Claude 3.7', 'Python'],
     iconName: 'BrainCircuit',
     isFeatured: true,
-    badge: 'Flagship Pipeline',
     visible: true,
   },
   {

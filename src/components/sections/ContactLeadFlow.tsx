@@ -98,12 +98,15 @@ export const ContactLeadFlow: React.FC = () => {
   const [submissionState, setSubmissionState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [submittedName, setSubmittedName] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false)
+  const [isBudgetDropdownOpen, setIsBudgetDropdownOpen] = useState(false)
 
   const {
     register,
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
@@ -124,6 +127,8 @@ export const ContactLeadFlow: React.FC = () => {
   })
 
   const consentChecked = watch('consent')
+  const currentService = watch('service')
+  const currentBudget = watch('budget')
 
   const onSubmit = async (data: ContactFormData) => {
     setSubmissionState('submitting')
@@ -150,7 +155,7 @@ export const ContactLeadFlow: React.FC = () => {
           particleCount: 80,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ['#6D28D9', '#4F46E5', '#C4B5FD', '#22D3EE'],
+          colors: ['#4F46E5', '#6366F1', '#818CF8', '#C7D2FE'],
         })
       } catch {
         // Fallback gracefully
@@ -170,90 +175,92 @@ export const ContactLeadFlow: React.FC = () => {
     setSubmissionState('idle')
     setErrorMessage('')
     setSubmittedName('')
+    setIsServiceDropdownOpen(false)
+    setIsBudgetDropdownOpen(false)
   }
 
   const firstName = submittedName.trim().split(' ')[0] || 'there'
 
   return (
-    <section id="contact" className="py-16 md:py-24 relative overflow-hidden bg-white text-gray-900">
+    <section id="contact" className="py-16 md:py-24 relative overflow-hidden bg-[#FAF9F6] text-gray-950 border-t border-gray-200/80">
       {/* Background ambient lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[450px] bg-brand-violet/5 blur-[160px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[450px] bg-primary/5 blur-[160px] rounded-full pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Large Rounded Split Container */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Rounded Split Container */}
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative rounded-[24px] border border-gray-200/90 bg-gray-50/90 backdrop-blur-xl shadow-[0_24px_55px_-12px_rgba(15,23,42,0.14),0_12px_24px_-6px_rgba(15,23,42,0.08),0_0_0_1px_rgba(15,23,42,0.05)] overflow-hidden"
+          className="relative rounded-2xl sm:rounded-[24px] border border-indigo-100 bg-white shadow-[0_16px_40px_-10px_rgba(0,0,0,0.08)] overflow-hidden"
         >
-          {/* Subtle noise texture */}
-          <div className="absolute inset-0 bg-noise opacity-30 pointer-events-none" />
-
-          {/* Soft violet glow behind / within */}
-          <div className="absolute -top-32 -left-32 w-96 h-96 bg-brand-violet/5 blur-3xl rounded-full pointer-events-none" />
-          <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-brand-indigo/5 blur-3xl rounded-full pointer-events-none" />
-
-          <div className="relative z-10 p-5 sm:p-8 md:p-12 lg:p-14">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+          <div className="relative z-10 p-4 sm:p-7 lg:p-9">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
               {/* LEFT COLUMN: ~40% (lg:col-span-5) */}
-              <div className="lg:col-span-5 flex flex-col justify-between h-full space-y-8">
+              <div className="lg:col-span-5 flex flex-col justify-between h-full space-y-5 sm:space-y-6">
                 <div>
-                  {/* Eyebrow badge */}
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-brand-violet/10 text-brand-violet border border-brand-violet/20 mb-4 shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand-violet animate-pulse" />
+                  {/* Eyebrow badge matching What Our Clients Say label */}
+                  <div className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-semibold bg-primary text-white border border-primary mb-3 sm:mb-3.5 shadow-xs">
                     <span>Contact</span>
                   </div>
 
                   {/* Heading */}
-                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display tracking-tight text-gray-900 leading-[1.15]">
+                  <h2 className="text-3xl sm:text-4xl lg:text-[38px] font-bold font-display tracking-tight text-gray-950 leading-[1.15]">
                     Get in{' '}
-                    <span className="bg-gradient-to-r from-brand-violet via-purple-600 to-brand-indigo bg-clip-text text-transparent">
-                      touch
+                    <span className="text-primary inline-block">
+                      Touch.
                     </span>
                   </h2>
 
-                  {/* One-line subtext */}
-                  <p className="mt-3.5 text-sm sm:text-base text-gray-600 font-normal leading-relaxed">
-                    Tell us about your project. Our AI assistant reviews every inquiry instantly and a team member follows up with a tailored plan.
+                  <p className="text-sm text-gray-600 mt-2 max-w-sm leading-relaxed">
+                    Have a project in mind or need engineering advisory? Reach out directly or fill out the form.
                   </p>
                 </div>
 
-                {/* Contact details */}
-                <div className="space-y-3.5 pt-2">
-                  <div className="p-3.5 rounded-xl bg-white border border-gray-200/85 shadow-[0_4px_14px_-2px_rgba(15,23,42,0.06)] hover:border-brand-violet/40 transition-all">
-                    <div className="text-[11px] font-mono uppercase tracking-wider text-gray-500 mb-1 flex items-center gap-1.5">
-                      <Mail className="w-3.5 h-3.5 text-brand-violet" />
-                      <span>Email</span>
+                {/* Contact details: Primary cards with white icons */}
+                <div className="space-y-2.5 pt-0.5">
+                  {/* Email Card */}
+                  <div className="p-3 sm:p-3.5 rounded-xl bg-primary text-white border border-white/20 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group">
+                    <div className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-white/80 mb-0.5 flex items-center gap-2">
+                      <div className="w-5.5 h-5.5 rounded-md bg-white/20 border border-white/30 flex items-center justify-center shrink-0">
+                        <Mail className="w-3 h-3 text-white" />
+                      </div>
+                      <span className="font-semibold text-white/90">Email</span>
                     </div>
                     <a
                       href={`mailto:${contactData.email}`}
-                      className="text-base sm:text-lg font-medium text-gray-900 hover:text-brand-violet transition-colors inline-block"
+                      className="text-sm sm:text-base font-bold text-white hover:text-white/80 transition-colors inline-block"
                     >
                       {contactData.email}
                     </a>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-white border border-gray-200/85 shadow-[0_4px_14px_-2px_rgba(15,23,42,0.06)] hover:border-brand-violet/40 transition-all">
-                    <div className="text-[11px] font-mono uppercase tracking-wider text-gray-500 mb-1 flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-brand-violet" />
-                      <span>Phone</span>
+                  {/* Phone Card */}
+                  <div className="p-3 sm:p-3.5 rounded-xl bg-primary text-white border border-white/20 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group">
+                    <div className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-white/80 mb-0.5 flex items-center gap-2">
+                      <div className="w-5.5 h-5.5 rounded-md bg-white/20 border border-white/30 flex items-center justify-center shrink-0">
+                        <Phone className="w-3 h-3 text-white" />
+                      </div>
+                      <span className="font-semibold text-white/90">Phone</span>
                     </div>
                     <a
-                      href={`tel:${contactData.phone.replace(/\s+/g, '')}`}
-                      className="text-base sm:text-lg font-medium text-gray-900 hover:text-brand-violet transition-colors inline-block font-mono"
+                      href="tel:+16267305710"
+                      className="text-sm sm:text-base font-bold text-white hover:text-white/80 transition-colors inline-block font-mono"
                     >
-                      {contactData.phone}
+                      (626) 730-5710
                     </a>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-white border border-gray-200/85 shadow-[0_4px_14px_-2px_rgba(15,23,42,0.06)] hover:border-brand-violet/40 transition-all">
-                    <div className="text-[11px] font-mono uppercase tracking-wider text-gray-500 mb-1 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-brand-violet" />
-                      <span>Address</span>
+                  {/* Address Card */}
+                  <div className="p-3 sm:p-3.5 rounded-xl bg-primary text-white border border-white/20 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group">
+                    <div className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-white/80 mb-0.5 flex items-center gap-2">
+                      <div className="w-5.5 h-5.5 rounded-md bg-white/20 border border-white/30 flex items-center justify-center shrink-0">
+                        <MapPin className="w-3 h-3 text-white" />
+                      </div>
+                      <span className="font-semibold text-white/90">Address</span>
                     </div>
-                    <p className="text-base sm:text-lg font-medium text-gray-900">
+                    <p className="text-sm sm:text-base font-bold text-white leading-snug">
                       {contactData.address}
                     </p>
                   </div>
@@ -270,7 +277,7 @@ export const ContactLeadFlow: React.FC = () => {
                         key={platform.name}
                         type="button"
                         aria-label={`Follow on ${platform.name}`}
-                        className="w-10 h-10 rounded-full bg-white border border-gray-200 text-gray-700 hover:text-white hover:border-brand-violet hover:bg-brand-violet hover:shadow-[0_0_12px_rgba(109,40,217,0.35)] transition-all flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-violet shadow-xs"
+                        className="w-10 h-10 rounded-full bg-white border border-gray-200 text-gray-800 hover:text-white hover:border-primary hover:bg-primary transition-all flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-xs"
                       >
                         {platform.svg}
                       </button>
@@ -290,17 +297,17 @@ export const ContactLeadFlow: React.FC = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.96 }}
                       transition={{ duration: 0.35, ease: 'easeOut' }}
-                      className="p-8 sm:p-10 rounded-2xl bg-white border border-brand-violet/30 text-center relative overflow-hidden shadow-[0_20px_50px_-12px_rgba(109,40,217,0.22),0_8px_20px_-4px_rgba(15,23,42,0.08),0_0_0_1px_rgba(109,40,217,0.25)]"
+                      className="p-8 sm:p-10 rounded-[22px] bg-primary text-white border border-white/20 text-center relative overflow-hidden shadow-xl"
                       aria-live="polite"
                     >
-                      {/* Prism glow centerpiece */}
-                      <div className="absolute inset-0 bg-gradient-to-b from-brand-violet/10 via-transparent to-transparent pointer-events-none" />
+                      {/* Subtle top sheen */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none" />
 
-                      {/* Animated check drawing in with prism beam motif */}
+                      {/* Animated checkmark */}
                       <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center">
-                        <div className="absolute inset-0 bg-brand-violet/15 rounded-full blur-xl animate-pulse" />
+                        <div className="absolute inset-0 bg-white/20 rounded-full blur-xl animate-pulse" />
                         <svg
-                          className="w-20 h-20 text-brand-violet relative z-10"
+                          className="w-20 h-20 text-white relative z-10"
                           viewBox="0 0 80 80"
                           fill="none"
                         >
@@ -308,14 +315,14 @@ export const ContactLeadFlow: React.FC = () => {
                             cx="40"
                             cy="40"
                             r="34"
-                            stroke="rgba(109, 40, 217, 0.2)"
+                            stroke="rgba(255, 255, 255, 0.25)"
                             strokeWidth="3"
                           />
                           <motion.circle
                             cx="40"
                             cy="40"
                             r="34"
-                            stroke="#6D28D9"
+                            stroke="#FFFFFF"
                             strokeWidth="3"
                             strokeLinecap="round"
                             initial={{ pathLength: 0 }}
@@ -324,7 +331,7 @@ export const ContactLeadFlow: React.FC = () => {
                           />
                           <motion.path
                             d="M26 40L35 49L54 30"
-                            stroke="#4F46E5"
+                            stroke="#FFFFFF"
                             strokeWidth="4"
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -335,18 +342,18 @@ export const ContactLeadFlow: React.FC = () => {
                         </svg>
                       </div>
 
-                      <h3 className="text-2xl sm:text-3xl font-bold font-display text-gray-900 mb-3">
+                      <h3 className="text-2xl sm:text-3xl font-bold font-display text-white mb-3">
                         Thanks, {firstName}!
                       </h3>
 
-                      <p className="text-sm sm:text-base text-gray-600 max-w-md mx-auto leading-relaxed mb-8">
-                        Our AI assistant is reviewing your request and a team member will reach out shortly with a tailored plan.
+                      <p className="text-sm sm:text-base text-white/85 max-w-md mx-auto leading-relaxed mb-8">
+                        Our team has received your message and will review your specifications shortly.
                       </p>
 
                       <button
                         type="button"
                         onClick={handleReset}
-                        className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-brand-violet hover:text-brand-indigo underline underline-offset-4 hover:no-underline transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-primary bg-white hover:bg-white/90 px-5 py-2.5 rounded-xl shadow-md transition-colors cursor-pointer"
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
                         <span>Send another inquiry</span>
@@ -360,8 +367,15 @@ export const ContactLeadFlow: React.FC = () => {
                       exit={{ opacity: 0 }}
                       onSubmit={handleSubmit(onSubmit)}
                       noValidate
-                      className="p-5 sm:p-8 rounded-2xl bg-white border border-gray-200 shadow-[0_16px_36px_-8px_rgba(15,23,42,0.12),0_6px_16px_-4px_rgba(15,23,42,0.06),0_0_0_1px_rgba(15,23,42,0.05)] relative"
+                      className={cn(
+                        'relative p-5 sm:p-7 lg:p-8 rounded-xl sm:rounded-[22px] overflow-hidden',
+                        'bg-primary text-white border border-white/20',
+                        'shadow-[0_12px_32px_-6px_rgba(79,70,229,0.35)]'
+                      )}
                     >
+                      {/* Subtle top sheen */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-xl sm:rounded-[22px] pointer-events-none" />
+
                       {/* Hidden Honeypot for spam protection */}
                       <div className="hidden" aria-hidden="true">
                         <input
@@ -372,14 +386,14 @@ export const ContactLeadFlow: React.FC = () => {
                         />
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                      <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-4.5">
                         {/* Row 1: Full Name */}
                         <div>
                           <label
                             htmlFor="contact-name"
-                            className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2"
+                            className="block text-xs sm:text-sm font-semibold text-white mb-2"
                           >
-                            Full Name <span className="text-brand-violet font-bold">*</span>
+                            Full Name <span className="text-white font-bold">*</span>
                           </label>
                           <input
                             id="contact-name"
@@ -389,16 +403,16 @@ export const ContactLeadFlow: React.FC = () => {
                             aria-invalid={errors.name ? 'true' : 'false'}
                             aria-describedby={errors.name ? 'name-error' : undefined}
                             className={cn(
-                              'w-full px-4 py-3 rounded-[12px] bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 text-sm transition-all duration-200 outline-none',
-                              'focus:bg-white focus:border-brand-violet focus:ring-2 focus:ring-brand-violet/20 focus:shadow-[0_0_15px_rgba(109,40,217,0.15)]',
-                              errors.name && 'border-red-400 focus:border-red-500 focus:ring-red-400/20'
+                              'w-full px-4 py-3 rounded-xl bg-white border border-white text-gray-950 placeholder-gray-400 text-sm transition-all duration-200 outline-none shadow-xs',
+                              'focus:ring-2 focus:ring-white/80 focus:shadow-md',
+                              errors.name && 'ring-2 ring-red-400'
                             )}
                             {...register('name')}
                           />
                           {errors.name && (
                             <p
                               id="name-error"
-                              className="mt-1.5 text-xs text-red-500 font-medium flex items-center gap-1.5"
+                              className="mt-1.5 text-xs text-white bg-red-500/90 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1.5 shadow-sm"
                             >
                               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                               <span>{errors.name.message}</span>
@@ -410,9 +424,9 @@ export const ContactLeadFlow: React.FC = () => {
                         <div>
                           <label
                             htmlFor="contact-email"
-                            className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2"
+                            className="block text-xs sm:text-sm font-semibold text-white mb-2"
                           >
-                            Business Email <span className="text-brand-violet font-bold">*</span>
+                            Business Email <span className="text-white font-bold">*</span>
                           </label>
                           <input
                             id="contact-email"
@@ -422,16 +436,16 @@ export const ContactLeadFlow: React.FC = () => {
                             aria-invalid={errors.email ? 'true' : 'false'}
                             aria-describedby={errors.email ? 'email-error' : undefined}
                             className={cn(
-                              'w-full px-4 py-3 rounded-[12px] bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 text-sm transition-all duration-200 outline-none',
-                              'focus:bg-white focus:border-brand-violet focus:ring-2 focus:ring-brand-violet/20 focus:shadow-[0_0_15px_rgba(109,40,217,0.15)]',
-                              errors.email && 'border-red-400 focus:border-red-500 focus:ring-red-400/20'
+                              'w-full px-4 py-3 rounded-xl bg-white border border-white text-gray-950 placeholder-gray-400 text-sm transition-all duration-200 outline-none shadow-xs',
+                              'focus:ring-2 focus:ring-white/80 focus:shadow-md',
+                              errors.email && 'ring-2 ring-red-400'
                             )}
                             {...register('email')}
                           />
                           {errors.email && (
                             <p
                               id="email-error"
-                              className="mt-1.5 text-xs text-red-500 font-medium flex items-center gap-1.5"
+                              className="mt-1.5 text-xs text-white bg-red-500/90 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1.5 shadow-sm"
                             >
                               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                               <span>{errors.email.message}</span>
@@ -443,9 +457,9 @@ export const ContactLeadFlow: React.FC = () => {
                         <div>
                           <label
                             htmlFor="contact-company"
-                            className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2"
+                            className="block text-xs sm:text-sm font-semibold text-white mb-2"
                           >
-                            Company Name <span className="text-brand-violet font-bold">*</span>
+                            Company Name <span className="text-white font-bold">*</span>
                           </label>
                           <input
                             id="contact-company"
@@ -455,16 +469,16 @@ export const ContactLeadFlow: React.FC = () => {
                             aria-invalid={errors.company ? 'true' : 'false'}
                             aria-describedby={errors.company ? 'company-error' : undefined}
                             className={cn(
-                              'w-full px-4 py-3 rounded-[12px] bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 text-sm transition-all duration-200 outline-none',
-                              'focus:bg-white focus:border-brand-violet focus:ring-2 focus:ring-brand-violet/20 focus:shadow-[0_0_15px_rgba(109,40,217,0.15)]',
-                              errors.company && 'border-red-400 focus:border-red-500 focus:ring-red-400/20'
+                              'w-full px-4 py-3 rounded-xl bg-white border border-white text-gray-950 placeholder-gray-400 text-sm transition-all duration-200 outline-none shadow-xs',
+                              'focus:ring-2 focus:ring-white/80 focus:shadow-md',
+                              errors.company && 'ring-2 ring-red-400'
                             )}
                             {...register('company')}
                           />
                           {errors.company && (
                             <p
                               id="company-error"
-                              className="mt-1.5 text-xs text-red-500 font-medium flex items-center gap-1.5"
+                              className="mt-1.5 text-xs text-white bg-red-500/90 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1.5 shadow-sm"
                             >
                               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                               <span>{errors.company.message}</span>
@@ -476,29 +490,29 @@ export const ContactLeadFlow: React.FC = () => {
                         <div>
                           <label
                             htmlFor="contact-phone"
-                            className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2"
+                            className="block text-xs sm:text-sm font-semibold text-white mb-2"
                           >
                             Phone Number{' '}
-                            <span className="text-gray-500 font-normal text-xs ml-1">(Optional)</span>
+                            <span className="text-white/70 font-normal text-xs ml-1">(Optional)</span>
                           </label>
                           <input
                             id="contact-phone"
                             type="tel"
-                            placeholder="+92 300 1234567"
+                            placeholder="(626) 730-5710"
                             disabled={submissionState === 'submitting'}
                             aria-invalid={errors.phone ? 'true' : 'false'}
                             aria-describedby={errors.phone ? 'phone-error' : undefined}
                             className={cn(
-                              'w-full px-4 py-3 rounded-[12px] bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 text-sm transition-all duration-200 outline-none',
-                              'focus:bg-white focus:border-brand-violet focus:ring-2 focus:ring-brand-violet/20 focus:shadow-[0_0_15px_rgba(109,40,217,0.15)]',
-                              errors.phone && 'border-red-400 focus:border-red-500 focus:ring-red-400/20'
+                              'w-full px-4 py-3 rounded-xl bg-white border border-white text-gray-950 placeholder-gray-400 text-sm transition-all duration-200 outline-none shadow-xs',
+                              'focus:ring-2 focus:ring-white/80 focus:shadow-md',
+                              errors.phone && 'ring-2 ring-red-400'
                             )}
                             {...register('phone')}
                           />
                           {errors.phone && (
                             <p
                               id="phone-error"
-                              className="mt-1.5 text-xs text-red-500 font-medium flex items-center gap-1.5"
+                              className="mt-1.5 text-xs text-white bg-red-500/90 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1.5 shadow-sm"
                             >
                               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                               <span>{errors.phone.message}</span>
@@ -506,40 +520,99 @@ export const ContactLeadFlow: React.FC = () => {
                           )}
                         </div>
 
-                        {/* Row 3: Service Interested In */}
-                        <div>
+                        {/* Row 3: Service Interested In (Custom Dropdown) */}
+                        <div className="relative">
                           <label
-                            htmlFor="contact-service"
-                            className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2"
+                            htmlFor="contact-service-btn"
+                            className="block text-xs sm:text-sm font-semibold text-white mb-2"
                           >
                             Service Interested In{' '}
-                            <span className="text-brand-violet font-bold">*</span>
+                            <span className="text-white font-bold">*</span>
                           </label>
                           <div className="relative">
-                            <select
-                              id="contact-service"
+                            {/* Hidden input for react-hook-form registration */}
+                            <input type="hidden" {...register('service')} />
+
+                            <button
+                              id="contact-service-btn"
+                              type="button"
                               disabled={submissionState === 'submitting'}
-                              aria-invalid={errors.service ? 'true' : 'false'}
-                              aria-describedby={errors.service ? 'service-error' : undefined}
+                              aria-haspopup="listbox"
+                              aria-expanded={isServiceDropdownOpen}
+                              onClick={() => {
+                                setIsBudgetDropdownOpen(false)
+                                setIsServiceDropdownOpen((prev) => !prev)
+                              }}
                               className={cn(
-                                'w-full px-4 py-3 rounded-[12px] bg-gray-50 border border-gray-300 text-gray-900 text-sm transition-all duration-200 outline-none appearance-none cursor-pointer',
-                                'focus:bg-white focus:border-brand-violet focus:ring-2 focus:ring-brand-violet/20 focus:shadow-[0_0_15px_rgba(109,40,217,0.15)]',
-                                errors.service && 'border-red-400 focus:border-red-500 focus:ring-red-400/20'
+                                'w-full px-4 py-3 rounded-xl bg-white border border-white text-gray-950 text-sm transition-all duration-200 outline-none cursor-pointer shadow-xs flex items-center justify-between font-medium text-left',
+                                'focus:ring-2 focus:ring-white/80 focus:shadow-md',
+                                isServiceDropdownOpen && 'ring-2 ring-white/90',
+                                errors.service && 'ring-2 ring-red-400'
                               )}
-                              {...register('service')}
                             >
-                              {serviceOptions.map((opt) => (
-                                <option key={opt} value={opt} className="bg-white text-gray-900">
-                                  {opt}
-                                </option>
-                              ))}
-                            </select>
-                            <ChevronDown className="w-4 h-4 text-gray-500 pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2" />
+                              <span className="truncate">{currentService || 'Select a service'}</span>
+                              <div
+                                className={cn(
+                                  'w-6 h-6 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0 transition-transform duration-200',
+                                  isServiceDropdownOpen && 'rotate-180 bg-primary/10'
+                                )}
+                              >
+                                <ChevronDown className="w-3.5 h-3.5 text-primary stroke-[2.5]" />
+                              </div>
+                            </button>
+
+                            {/* Outside click backdrop */}
+                            {isServiceDropdownOpen && (
+                              <div
+                                className="fixed inset-0 z-30"
+                                onClick={() => setIsServiceDropdownOpen(false)}
+                                aria-hidden="true"
+                              />
+                            )}
+
+                            {/* Custom animated dropdown panel */}
+                            <AnimatePresence>
+                              {isServiceDropdownOpen && (
+                                <motion.div
+                                  initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                                  exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                                  className="absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden z-40 p-1.5 space-y-1 max-h-60 overflow-y-auto"
+                                  role="listbox"
+                                >
+                                  {serviceOptions.map((opt) => {
+                                    const isSelected = currentService === opt
+                                    return (
+                                      <button
+                                        key={opt}
+                                        type="button"
+                                        role="option"
+                                        aria-selected={isSelected}
+                                        onClick={() => {
+                                          setValue('service', opt as ContactFormData['service'], { shouldValidate: true })
+                                          setIsServiceDropdownOpen(false)
+                                        }}
+                                        className={cn(
+                                          'w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors text-left cursor-pointer',
+                                          isSelected
+                                            ? 'bg-primary text-white font-semibold shadow-xs'
+                                            : 'text-gray-800 hover:bg-indigo-50 hover:text-primary'
+                                        )}
+                                      >
+                                        <span className="truncate">{opt}</span>
+                                        {isSelected && <Check className="w-4 h-4 text-white stroke-[2.5] shrink-0 ml-2" />}
+                                      </button>
+                                    )
+                                  })}
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </div>
                           {errors.service && (
                             <p
                               id="service-error"
-                              className="mt-1.5 text-xs text-red-500 font-medium flex items-center gap-1.5"
+                              className="mt-1.5 text-xs text-white bg-red-500/90 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1.5 shadow-sm"
                             >
                               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                               <span>{errors.service.message}</span>
@@ -547,33 +620,93 @@ export const ContactLeadFlow: React.FC = () => {
                           )}
                         </div>
 
-                        {/* Row 3: Budget Range (Optional) */}
-                        <div>
+                        {/* Row 3: Budget Range (Custom Dropdown) */}
+                        <div className="relative">
                           <label
-                            htmlFor="contact-budget"
-                            className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2"
+                            htmlFor="contact-budget-btn"
+                            className="block text-xs sm:text-sm font-semibold text-white mb-2"
                           >
                             Budget Range{' '}
-                            <span className="text-gray-500 font-normal text-xs ml-1">(Optional)</span>
+                            <span className="text-white/70 font-normal text-xs ml-1">(Optional)</span>
                           </label>
                           <div className="relative">
-                            <select
-                              id="contact-budget"
+                            {/* Hidden input for react-hook-form registration */}
+                            <input type="hidden" {...register('budget')} />
+
+                            <button
+                              id="contact-budget-btn"
+                              type="button"
                               disabled={submissionState === 'submitting'}
-                              aria-invalid={errors.budget ? 'true' : 'false'}
+                              aria-haspopup="listbox"
+                              aria-expanded={isBudgetDropdownOpen}
+                              onClick={() => {
+                                setIsServiceDropdownOpen(false)
+                                setIsBudgetDropdownOpen((prev) => !prev)
+                              }}
                               className={cn(
-                                'w-full px-4 py-3 rounded-[12px] bg-gray-50 border border-gray-300 text-gray-900 text-sm transition-all duration-200 outline-none appearance-none cursor-pointer',
-                                'focus:bg-white focus:border-brand-violet focus:ring-2 focus:ring-brand-violet/20 focus:shadow-[0_0_15px_rgba(109,40,217,0.15)]'
+                                'w-full px-4 py-3 rounded-xl bg-white border border-white text-gray-950 text-sm transition-all duration-200 outline-none cursor-pointer shadow-xs flex items-center justify-between font-medium text-left',
+                                'focus:ring-2 focus:ring-white/80 focus:shadow-md',
+                                isBudgetDropdownOpen && 'ring-2 ring-white/90'
                               )}
-                              {...register('budget')}
                             >
-                              {budgetOptions.map((opt) => (
-                                <option key={opt} value={opt} className="bg-white text-gray-900">
-                                  {opt}
-                                </option>
-                              ))}
-                            </select>
-                            <ChevronDown className="w-4 h-4 text-gray-500 pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2" />
+                              <span className="truncate">{currentBudget || 'Select budget'}</span>
+                              <div
+                                className={cn(
+                                  'w-6 h-6 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0 transition-transform duration-200',
+                                  isBudgetDropdownOpen && 'rotate-180 bg-primary/10'
+                                )}
+                              >
+                                <ChevronDown className="w-3.5 h-3.5 text-primary stroke-[2.5]" />
+                              </div>
+                            </button>
+
+                            {/* Outside click backdrop */}
+                            {isBudgetDropdownOpen && (
+                              <div
+                                className="fixed inset-0 z-30"
+                                onClick={() => setIsBudgetDropdownOpen(false)}
+                                aria-hidden="true"
+                              />
+                            )}
+
+                            {/* Custom animated dropdown panel */}
+                            <AnimatePresence>
+                              {isBudgetDropdownOpen && (
+                                <motion.div
+                                  initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                                  exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                                  className="absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden z-40 p-1.5 space-y-1 max-h-60 overflow-y-auto"
+                                  role="listbox"
+                                >
+                                  {budgetOptions.map((opt) => {
+                                    const isSelected = currentBudget === opt
+                                    return (
+                                      <button
+                                        key={opt}
+                                        type="button"
+                                        role="option"
+                                        aria-selected={isSelected}
+                                        onClick={() => {
+                                          setValue('budget', opt as ContactFormData['budget'], { shouldValidate: true })
+                                          setIsBudgetDropdownOpen(false)
+                                        }}
+                                        className={cn(
+                                          'w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors text-left cursor-pointer',
+                                          isSelected
+                                            ? 'bg-primary text-white font-semibold shadow-xs'
+                                            : 'text-gray-800 hover:bg-indigo-50 hover:text-primary'
+                                        )}
+                                      >
+                                        <span className="truncate">{opt}</span>
+                                        {isSelected && <Check className="w-4 h-4 text-white stroke-[2.5] shrink-0 ml-2" />}
+                                      </button>
+                                    )
+                                  })}
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </div>
                         </div>
 
@@ -581,29 +714,29 @@ export const ContactLeadFlow: React.FC = () => {
                         <div className="md:col-span-2">
                           <label
                             htmlFor="contact-message"
-                            className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2"
+                            className="block text-xs sm:text-sm font-semibold text-white mb-2"
                           >
                             Project Details / Message{' '}
-                            <span className="text-brand-violet font-bold">*</span>
+                            <span className="text-white font-bold">*</span>
                           </label>
                           <textarea
                             id="contact-message"
-                            rows={5}
+                            rows={4}
                             placeholder="Tell us about your project, business challenge, requirements, or automation goals..."
                             disabled={submissionState === 'submitting'}
                             aria-invalid={errors.message ? 'true' : 'false'}
                             aria-describedby={errors.message ? 'message-error' : undefined}
                             className={cn(
-                              'w-full px-4 py-3 rounded-[12px] bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 text-sm transition-all duration-200 outline-none resize-y min-h-[120px]',
-                              'focus:bg-white focus:border-brand-violet focus:ring-2 focus:ring-brand-violet/20 focus:shadow-[0_0_15px_rgba(109,40,217,0.15)]',
-                              errors.message && 'border-red-400 focus:border-red-500 focus:ring-red-400/20'
+                              'w-full px-4 py-3 rounded-xl bg-white border border-white text-gray-950 placeholder-gray-400 text-sm transition-all duration-200 outline-none resize-y min-h-[120px] shadow-xs',
+                              'focus:ring-2 focus:ring-white/80 focus:shadow-md',
+                              errors.message && 'ring-2 ring-red-400'
                             )}
                             {...register('message')}
                           />
                           {errors.message && (
                             <p
                               id="message-error"
-                              className="mt-1.5 text-xs text-red-500 font-medium flex items-center gap-1.5"
+                              className="mt-1.5 text-xs text-white bg-red-500/90 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1.5 shadow-sm"
                             >
                               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                               <span>{errors.message.message}</span>
@@ -631,23 +764,23 @@ export const ContactLeadFlow: React.FC = () => {
                                 className={cn(
                                   'w-5 h-5 rounded-[6px] border transition-all flex items-center justify-center',
                                   consentChecked
-                                    ? 'bg-gradient-to-r from-brand-violet to-brand-indigo border-brand-violet text-white shadow-[0_0_10px_rgba(109,40,217,0.4)]'
-                                    : 'border-gray-300 bg-gray-50 group-hover:border-gray-400',
-                                  errors.consent && 'border-red-400'
+                                    ? 'bg-white border-white text-primary shadow-xs'
+                                    : 'border-white/50 bg-white/20 group-hover:border-white',
+                                  errors.consent && 'border-red-300'
                                 )}
                               >
-                                {consentChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                                {consentChecked && <Check className="w-3.5 h-3.5 stroke-[3] text-primary" />}
                               </div>
                             </div>
-                            <span className="text-xs sm:text-sm text-gray-700 leading-normal">
+                            <span className="text-xs sm:text-sm text-white/95 leading-normal font-medium">
                               I agree to be contacted about my inquiry.{' '}
-                              <span className="text-brand-violet font-bold">*</span>
+                              <span className="text-white font-bold">*</span>
                             </span>
                           </label>
                           {errors.consent && (
                             <p
                               id="consent-error"
-                              className="mt-1.5 text-xs text-red-500 font-medium flex items-center gap-1.5 pl-8"
+                              className="mt-1.5 text-xs text-white bg-red-500/90 px-2.5 py-1 rounded-lg font-medium flex items-center gap-1.5 pl-8 shadow-sm"
                             >
                               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                               <span>{errors.consent.message}</span>
@@ -661,10 +794,10 @@ export const ContactLeadFlow: React.FC = () => {
                         <div
                           role="alert"
                           aria-live="polite"
-                          className="mt-5 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm flex items-center justify-between gap-3"
+                          className="mt-5 p-4 rounded-xl bg-red-600/90 border border-red-400 text-white text-xs sm:text-sm flex items-center justify-between gap-3 shadow-md"
                         >
                           <div className="flex items-center gap-2">
-                            <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
+                            <AlertCircle className="w-4 h-4 text-white shrink-0" />
                             <span>
                               {errorMessage || 'Something went wrong. Please try again or email us directly.'}
                             </span>
@@ -672,7 +805,7 @@ export const ContactLeadFlow: React.FC = () => {
                           <button
                             type="button"
                             onClick={handleSubmit(onSubmit)}
-                            className="px-3 py-1 rounded-lg bg-red-100 hover:bg-red-200 text-red-800 font-semibold text-xs border border-red-300 transition-colors cursor-pointer shrink-0"
+                            className="px-3 py-1 rounded-lg bg-white hover:bg-white/90 text-primary font-bold text-xs shadow-xs transition-colors cursor-pointer shrink-0"
                           >
                             Retry
                           </button>
@@ -680,33 +813,32 @@ export const ContactLeadFlow: React.FC = () => {
                       )}
 
                       {/* Submit Button */}
-                      <div className="mt-6">
+                      <div className="mt-5 sm:mt-6 relative z-10">
                         <button
                           type="submit"
                           disabled={submissionState === 'submitting'}
                           className={cn(
-                            'w-full py-3.5 px-6 rounded-xl font-semibold text-sm sm:text-base text-white',
-                            'bg-gradient-to-r from-brand-violet to-brand-indigo',
-                            'hover:from-brand-violet/90 hover:to-brand-indigo/90 hover:shadow-[0_0_24px_rgba(109,40,217,0.45)]',
-                            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-violet focus-visible:ring-offset-2',
-                            'transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-glow-violet'
+                            'w-full py-3.5 px-6 rounded-xl font-bold text-sm sm:text-base',
+                            'bg-white text-primary hover:bg-white/95 hover:shadow-[0_8px_24px_rgba(0,0,0,0.2)]',
+                            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white',
+                            'transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-md'
                           )}
                         >
                           {submissionState === 'submitting' ? (
                             <>
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                              <span>Sending...</span>
+                              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                              <span>Sending Inquiry...</span>
                             </>
                           ) : (
                             <>
                               <span>Send Inquiry</span>
-                              <Send className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                              <Send className="w-4 h-4 text-primary transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                             </>
                           )}
                         </button>
 
                         {/* Confidentiality notice */}
-                        <p className="mt-3 text-center text-xs text-gray-500 leading-normal">
+                        <p className="mt-3 text-center text-xs text-white/75 leading-normal font-medium">
                           By submitting, you agree to our confidential inquiry handling. We never share your data.
                         </p>
                       </div>
