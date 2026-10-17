@@ -107,7 +107,9 @@ export const handler = async (event) => {
     if (process.env.N8N_AUTH_HEADER_NAME && process.env.N8N_AUTH_HEADER_VALUE) {
       webhookHeaders[process.env.N8N_AUTH_HEADER_NAME] = process.env.N8N_AUTH_HEADER_VALUE
     }
-
+    console.log('[submit-lead] DEBUG name:', JSON.stringify(process.env.N8N_AUTH_HEADER_NAME),
+      '| value set:', !!process.env.N8N_AUTH_HEADER_VALUE,
+      '| value length:', (process.env.N8N_AUTH_HEADER_VALUE || '').length)
     const n8nResponse = await fetch(webhookUrl, {
       method: 'POST',
       headers: webhookHeaders,
